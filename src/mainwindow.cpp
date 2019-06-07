@@ -49,6 +49,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QtWebKitWidgets/QWebFrame>
+#include <QDockWidget>
 #endif
 
 #include "cachingnm.h"
@@ -221,7 +222,7 @@ void MainWindow::init(AnyOption *opts)
     view->setPage(new QwkWebPage(view));
 
 	// --- Virtual keyboard -- //
-	keyboard = new Keyboard(this);
+	keyboard = new Keyboard();
 	if (keyboard) {
 		keyboard->setWidget(view);
 		keyboard->setFixedSize(this->width(), 400);
@@ -230,6 +231,13 @@ void MainWindow::init(AnyOption *opts)
 		connect(view, SIGNAL(loadStarted()), keyboard, SLOT(hide()));
 		connect(view, SIGNAL(loadFinished(bool)), this, SLOT(initKeyboard()));
 	}
+
+	QDockWidget *dockWidget = new QDockWidget(this);
+	dockWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
+	dockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
+	dockWidget->setTitleBarWidget(0);
+	dockWidget->setWidget(keyboard);
+	addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
 
     // --- Disk cache --- //
     if (qwkSettings->getBool("cache/enable")) {
@@ -1145,20 +1153,21 @@ void MainWindow::initKeyboard() {
 			if (frame) {
 				frame->addToJavaScriptWindowObject("__main_window__", this);
 				frame->documentElement().evaluateJavaScript(
-						"function __main_window_isTextElement__(el) {"
-						"    var inputTypes = \"email number password search tel text url\";"
-						"    return (el.tagName == \"TEXTAREA\") || (el.tagName == \"INPUT\" && inputTypes.includes(el.type));"
-						"}"
-						"this.addEventListener(\"DOMFocusIn\", function(ev) {"
-						"    if (__main_window_isTextElement__(ev.target)) {"
-						"        __main_window__.handleFocusIn();"
-						"    }"
-						"}, false);"
-						"this.addEventListener(\"DOMFocusOut\", function(ev) {"
-						"    if (__main_window_isTextElement__(ev.target)) {"
-						"        __main_window__.handleFocusOut();"
-						"    }"
-						"}, false);"
+                        "function __main_window_isTextElement__(el) {"
+                        "    var inputTypes = \"email number password search tel text url\";"
+                        "    return (el.tagName == \"TEXTAREA\") || (el.tagName == \"INPUT\" && inputTypes.includes(el.type));"
+                        "}"
+                        "this.addEventListener(\"DOMFocusIn\", function(ev) {"
+                        "    if (__main_window_isTextElement__(ev.target)) {"
+                        "        __main_window__.handleFocusIn();"
+                        "        document.body.scrollTop = window.scrollY + ev.target.getBoundingClientRect().top - 80;"
+                        "    }"
+                        "}, false);"
+                        "this.addEventListener(\"DOMFocusOut\", function(ev) {"
+                        "    if (__main_window_isTextElement__(ev.target)) {"
+                        "        __main_window__.handleFocusOut();"
+                        "    }"
+                        "}, false);"
 						);
 			}
 		}

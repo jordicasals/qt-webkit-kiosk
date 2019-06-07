@@ -103,7 +103,7 @@ void QwkSettings::loadSettings(QString ini_file)
     }
 
     if (!qsettings->contains("view/hide_scrollbars")) {
-        qsettings->setValue("view/hide_scrollbars", true);
+        qsettings->setValue("view/hide_scrollbars", false);
     }
 
     if (!qsettings->contains("view/stay_on_top")) {
@@ -124,7 +124,7 @@ void QwkSettings::loadSettings(QString ini_file)
 
 
     if (!qsettings->contains("browser/homepage")) {
-        qsettings->setValue("browser/homepage", RESOURCES"default.html");
+        qsettings->setValue("browser/homepage", "https://www.industrialshields.com");
     }
     if (!qsettings->contains("browser/javascript")) {
         qsettings->setValue("browser/javascript", true);
