@@ -33,6 +33,7 @@
 ****************************************************************************/
 
 #include <QApplication>
+#include <QFontDatabase>
 #include "mainwindow.h"
 #include "anyoption.h"
 
@@ -106,6 +107,8 @@ int main(int argc, char * argv[])
     if (!setupOptions(cmdopts)) {
         return 0;
     }
+
+	QFontDatabase::addApplicationFont("/usr/share/fonts/liberation/LiberationSans-Regular.ttf");
 
     MainWindow *browser = new MainWindow();
     browser->init(cmdopts);
