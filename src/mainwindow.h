@@ -48,6 +48,7 @@
 #include <QMainWindow>
 #include <QtNetwork>
 #include <QtWebKit>
+#include <QWebPage>
 
 #ifdef USE_TESTLIB
 #include <QtTest/QTestEventList>
@@ -61,6 +62,7 @@
 #include "anyoption.h"
 #include "unixsignals.h"
 #include "qwk_settings.h"
+#include "keyboard.h"
 
 class MainWindow : public QMainWindow
 {
@@ -105,6 +107,10 @@ protected slots:
     // USR2 - Back to homepage, or load page from config
     void unixSignalUsr2();
 
+	void initKeyboard();
+	void handleFocusIn();
+	void handleFocusOut();
+
 protected:
 
     void centerFixedSizeWindow();
@@ -146,6 +152,8 @@ private:
 
     QTimer *delayedResize;
     QTimer *delayedLoad;
+
+	Keyboard *keyboard;
 };
 
 #endif // QWK_MAINWINDOW_H

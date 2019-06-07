@@ -53,6 +53,7 @@
 
 #include "cachingnm.h"
 #include "persistentcookiejar.h"
+#include "keyboard.h"
 
 MainWindow::MainWindow() : QMainWindow()
 {
@@ -219,6 +220,17 @@ void MainWindow::init(AnyOption *opts)
     view->setSettings(qwkSettings);
     view->setPage(new QwkWebPage(view));
 
+	// --- Virtual keyboard -- //
+	keyboard = new Keyboard(this);
+	if (keyboard) {
+		keyboard->setWidget(view);
+		keyboard->setFixedSize(this->width(), 400);
+		keyboard->move(0, this->height() - 400);
+
+		connect(view, SIGNAL(loadStarted()), keyboard, SLOT(hide()));
+		connect(view, SIGNAL(loadFinished(bool)), this, SLOT(initKeyboard()));
+	}
+
     // --- Disk cache --- //
     if (qwkSettings->getBool("cache/enable")) {
         diskCache = new QNetworkDiskCache(this);
@@ -339,7 +351,6 @@ void MainWindow::init(AnyOption *opts)
         delay_load = qwkSettings->getUInt("browser/startup_load_delay");
     }
     delayedLoad->singleShot(delay_load, this, SLOT(delayedPageLoad()));
-
 }
 
 void MainWindow::delayedWindowResize()
@@ -366,6 +377,11 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 {
    QMainWindow::resizeEvent(event);
    // Your code here.
+
+   if (keyboard) {
+	   keyboard->move(0, this->height() - 400);
+	   keyboard->setFixedSize(this->width(), 400);
+   }
 }
 
 void MainWindow::delayedPageLoad()
@@ -1119,4 +1135,46 @@ void MainWindow::handleQwkNetworkReplyUrl(QUrl url)
              << "MainWindow::handleQwkNetworkReplyUrl - "
              << "url=" << url.toString()
                 ;
+}
+
+void MainWindow::initKeyboard() {
+	if (view) {
+		QWebPage *page = view->page();
+		if (page) {
+			QWebFrame *frame = view->page()->mainFrame();
+			if (frame) {
+				frame->addToJavaScriptWindowObject("__main_window__", this);
+				frame->documentElement().evaluateJavaScript(
+						"function __main_window_isTextElement__(el) {"
+						"    var inputTypes = \"email number password search tel text url\";"
+						"    return (el.tagName == \"TEXTAREA\") || (el.tagName == \"INPUT\" && inputTypes.includes(el.type));"
+						"}"
+						"this.addEventListener(\"DOMFocusIn\", function(ev) {"
+						"    if (__main_window_isTextElement__(ev.target)) {"
+						"        __main_window__.handleFocusIn();"
+						"    }"
+						"}, false);"
+						"this.addEventListener(\"DOMFocusOut\", function(ev) {"
+						"    if (__main_window_isTextElement__(ev.target)) {"
+						"        __main_window__.handleFocusOut();"
+						"    }"
+						"}, false);"
+						);
+			}
+		}
+	}
+}
+
+void MainWindow::handleFocusIn() {
+	qDebug() << "handle focus in";
+	if (keyboard) {
+		keyboard->show();
+	}
+}
+
+void MainWindow::handleFocusOut() {
+	qDebug() << "handle focus out";
+	if (keyboard) {
+		keyboard->hide();
+	}
 }
