@@ -18,14 +18,14 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 
 	QSignalMapper *signalMapper = new QSignalMapper(this);
 
-	sl = new QStackedLayout(this);
+	sl = new QStackedLayout();
 	if (sl) {
-		QVBoxLayout *vl1 = new QVBoxLayout(this);
+		QVBoxLayout *vl1 = new QVBoxLayout();
 		if (vl1) {
 			vl1->setAlignment(Qt::AlignCenter);
 
 			// First row
-			QHBoxLayout *hl1 = new QHBoxLayout(this);
+			QHBoxLayout *hl1 = new QHBoxLayout();
 			if (hl1) {
 				hl1->setAlignment(Qt::AlignCenter);
 				hl1->setSpacing(5);
@@ -46,7 +46,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Second row
-			QHBoxLayout *hl2 = new QHBoxLayout(this);
+			QHBoxLayout *hl2 = new QHBoxLayout();
 			if (hl2) {
 				hl2->setAlignment(Qt::AlignCenter);
 				hl2->setSpacing(5);
@@ -67,7 +67,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Third row
-			QHBoxLayout *hl3 = new QHBoxLayout(this);
+			QHBoxLayout *hl3 = new QHBoxLayout();
 			if (hl3) {
 				hl3->setAlignment(Qt::AlignCenter);
 				hl3->setSpacing(5);
@@ -87,7 +87,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Fourth row
-			QHBoxLayout *hl4 = new QHBoxLayout(this);
+			QHBoxLayout *hl4 = new QHBoxLayout();
 			if (hl4) {
 				hl4->setAlignment(Qt::AlignCenter);
 				hl4->setSpacing(5);
@@ -105,7 +105,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Fifth row
-			QHBoxLayout *hl5 = new QHBoxLayout(this);
+			QHBoxLayout *hl5 = new QHBoxLayout();
 			if (hl5) {
 				hl5->setAlignment(Qt::AlignCenter);
 				hl5->setSpacing(5);
@@ -126,12 +126,12 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			sl->addWidget(w);
 		}
 
-		QVBoxLayout *vl2 = new QVBoxLayout(this);
+		QVBoxLayout *vl2 = new QVBoxLayout();
 		if (vl2) {
 			vl2->setAlignment(Qt::AlignCenter);
 
 			// First row
-			QHBoxLayout *hl1 = new QHBoxLayout(this);
+			QHBoxLayout *hl1 = new QHBoxLayout();
 			if (hl1) {
 				hl1->setAlignment(Qt::AlignCenter);
 				hl1->setSpacing(5);
@@ -152,7 +152,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Second row
-			QHBoxLayout *hl2 = new QHBoxLayout(this);
+			QHBoxLayout *hl2 = new QHBoxLayout();
 			if (hl2) {
 				hl2->setAlignment(Qt::AlignCenter);
 				hl2->setSpacing(5);
@@ -173,7 +173,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Third row
-			QHBoxLayout *hl3 = new QHBoxLayout(this);
+			QHBoxLayout *hl3 = new QHBoxLayout();
 			if (hl3) {
 				hl3->setAlignment(Qt::AlignCenter);
 				hl3->setSpacing(5);
@@ -193,7 +193,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Fourth row
-			QHBoxLayout *hl4 = new QHBoxLayout(this);
+			QHBoxLayout *hl4 = new QHBoxLayout();
 			if (hl4) {
 				hl4->setAlignment(Qt::AlignCenter);
 				hl4->setSpacing(5);
@@ -211,7 +211,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Fifth row
-			QHBoxLayout *hl5 = new QHBoxLayout(this);
+			QHBoxLayout *hl5 = new QHBoxLayout();
 			if (hl5) {
 				hl5->setAlignment(Qt::AlignCenter);
 				hl5->setSpacing(5);
@@ -232,12 +232,12 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			sl->addWidget(w);
 		}
 
-		QVBoxLayout *vl3 = new QVBoxLayout(this);
+		QVBoxLayout *vl3 = new QVBoxLayout();
 		if (vl3) {
 			vl3->setAlignment(Qt::AlignCenter);
 
 			// First row
-			QHBoxLayout *hl1 = new QHBoxLayout(this);
+			QHBoxLayout *hl1 = new QHBoxLayout();
 			if (hl1) {
 				hl1->setAlignment(Qt::AlignCenter);
 				hl1->setSpacing(5);
@@ -258,7 +258,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Second row
-			QHBoxLayout *hl2 = new QHBoxLayout(this);
+			QHBoxLayout *hl2 = new QHBoxLayout();
 			if (hl2) {
 				hl2->setAlignment(Qt::AlignCenter);
 				hl2->setSpacing(5);
@@ -279,7 +279,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Third row
-			QHBoxLayout *hl3 = new QHBoxLayout(this);
+			QHBoxLayout *hl3 = new QHBoxLayout();
 			if (hl3) {
 				hl3->setAlignment(Qt::AlignCenter);
 				hl3->setSpacing(5);
@@ -299,7 +299,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Fourth row
-			QHBoxLayout *hl4 = new QHBoxLayout(this);
+			QHBoxLayout *hl4 = new QHBoxLayout();
 			if (hl4) {
 				hl4->setAlignment(Qt::AlignCenter);
 				hl4->setSpacing(5);
@@ -317,7 +317,7 @@ Keyboard::Keyboard(QWidget *parent) : QWidget(parent) {
 			}
 
 			// Fifth row
-			QHBoxLayout *hl5 = new QHBoxLayout(this);
+			QHBoxLayout *hl5 = new QHBoxLayout();
 			if (hl5) {
 				hl5->setAlignment(Qt::AlignCenter);
 				hl5->setSpacing(5);
