@@ -235,7 +235,7 @@ void MainWindow::init(AnyOption *opts)
 	QDockWidget *dockWidget = new QDockWidget(this);
 	dockWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
 	dockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
-	dockWidget->setTitleBarWidget(0);
+	dockWidget->setTitleBarWidget(new QWidget());
 	dockWidget->setWidget(keyboard);
 	addDockWidget(Qt::BottomDockWidgetArea, dockWidget);
 
