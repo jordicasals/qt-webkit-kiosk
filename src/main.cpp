@@ -34,6 +34,8 @@
 
 #include <QApplication>
 #include <QFontDatabase>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 #include "mainwindow.h"
 #include "anyoption.h"
 
@@ -112,6 +114,16 @@ int main(int argc, char * argv[])
 
     MainWindow *browser = new MainWindow();
     browser->init(cmdopts);
+
+	QGraphicsScene *scene = new QGraphicsScene();
+    QGraphicsView *view = new QGraphicsView();
+    view->setGeometry(0, 0, 720, 1280);
+    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scene->addWidget(browser);
+    view->setScene(scene);
+    view->show();
+    view->rotate(90);
 
     // executes browser.cleanupSlot() when the Qt framework emits aboutToQuit() signal.
     QObject::connect(qApp, SIGNAL(aboutToQuit()),

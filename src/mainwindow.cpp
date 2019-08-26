@@ -227,6 +227,7 @@ void MainWindow::init(AnyOption *opts)
 		keyboard->setWidget(view);
 		keyboard->setFixedSize(this->width(), 400);
 		keyboard->move(0, this->height() - 400);
+		keyboard->setVisible(false);
 
 		connect(view, SIGNAL(loadStarted()), keyboard, SLOT(hide()));
 		connect(view, SIGNAL(loadFinished(bool)), this, SLOT(initKeyboard()));
@@ -342,11 +343,11 @@ void MainWindow::init(AnyOption *opts)
     view->page()->view()->setFocusPolicy(Qt::StrongFocus);
     view->setFocusPolicy(Qt::StrongFocus);
 
-    if (qwkSettings->getBool("view/hide_mouse_cursor")) {
+    //if (qwkSettings->getBool("view/hide_mouse_cursor")) {
         QApplication::setOverrideCursor(Qt::BlankCursor);
         view->setCursor(*hiddenCurdor);
         QApplication::processEvents(); //process events to force cursor update before press
-    }
+    //}
 
     int delay_resize = 1;
     if (qwkSettings->getBool("view/startup_resize_delayed")) {
@@ -363,6 +364,7 @@ void MainWindow::init(AnyOption *opts)
 
 void MainWindow::delayedWindowResize()
 {
+	/*
     if (qwkSettings->getBool("view/fullscreen")) {
         showFullScreen();
     } else if (qwkSettings->getBool("view/maximized")) {
@@ -370,6 +372,8 @@ void MainWindow::delayedWindowResize()
     } else if (qwkSettings->getBool("view/fixed-size")) {
         centerFixedSizeWindow();
     }
+	*/
+	centerFixedSizeWindow();
     QApplication::processEvents(); //process events to force update
 
     this->setFocusPolicy(Qt::StrongFocus);
@@ -439,17 +443,20 @@ void MainWindow::cleanupSlot()
 
 void MainWindow::centerFixedSizeWindow()
 {
-    quint16 widowWidth = qwkSettings->getUInt("view/fixed-width");
-    quint16 widowHeight = qwkSettings->getUInt("view/fixed-height");
+    quint16 widowWidth = 720; //qwkSettings->getUInt("view/fixed-width");
+    quint16 widowHeight = 1290; //qwkSettings->getUInt("view/fixed-height");
 
+	/*
     quint16 screenWidth = QApplication::desktop()->screenGeometry().width();
     quint16 screenHeight = QApplication::desktop()->screenGeometry().height();
 
     qDebug() << "Screen size: " << screenWidth << "x" << screenHeight;
+	*/
 
     quint16 x = 0;
     quint16 y = 0;
 
+	/*
     if (qwkSettings->getUInt("view/fixed-centered")) {
         x = (screenWidth - widowWidth) / 2;
         y = (screenHeight - widowHeight) / 2;
@@ -457,6 +464,7 @@ void MainWindow::centerFixedSizeWindow()
         x = qwkSettings->getUInt("view/fixed-x");
         y = qwkSettings->getUInt("view/fixed-y");
     }
+	*/
 
     qDebug() << "Move window to: (" << x << ";" << y << ")";
 
@@ -615,6 +623,7 @@ void MainWindow::handleQwkNetworkError(QNetworkReply::NetworkError error, QStrin
 void MainWindow::desktopResized(int p)
 {
     qDebug() << "Desktop resized event: " << p;
+	/*
     if (qwkSettings->getBool("view/fullscreen")) {
         showFullScreen();
     } else if (qwkSettings->getBool("view/maximized")) {
@@ -622,6 +631,8 @@ void MainWindow::desktopResized(int p)
     } else if (qwkSettings->getBool("view/fixed-size")) {
         centerFixedSizeWindow();
     }
+	*/
+	centerFixedSizeWindow();
 }
 
 /**
@@ -1153,21 +1164,53 @@ void MainWindow::initKeyboard() {
 			if (frame) {
 				frame->addToJavaScriptWindowObject("__main_window__", this);
 				frame->documentElement().evaluateJavaScript(
+						//"alert('loaded');"
                         "function __main_window_isTextElement__(el) {"
-                        "    var inputTypes = \"email number password search tel text url\";"
-                        "    return (el.tagName == \"TEXTAREA\") || (el.tagName == \"INPUT\" && inputTypes.includes(el.type));"
+						//"alert('el: ' + el.tagName + ' ' + el.type);"
+						"    if (el.tagName == 'TEXTAREA') {"
+						"        return true;"
+						"    } else if (el.tagName == 'INPUT') {"
+                        "        var inputTypes = ['email', 'number', 'password', 'search', 'tel', 'text', 'url'];"
+						"        for (var i in inputTypes) {"
+						"            if (el.type == inputTypes[i]) {"
+						"                return true;"
+						"            }"
+						"        }"
+						"    }"
+						"    return false;"
                         "}"
-                        "this.addEventListener(\"DOMFocusIn\", function(ev) {"
-                        "    if (__main_window_isTextElement__(ev.target)) {"
-                        "        __main_window__.handleFocusIn();"
-                        "        document.body.scrollTop = window.scrollY + ev.target.getBoundingClientRect().top - 80;"
-                        "    }"
-                        "}, false);"
-                        "this.addEventListener(\"DOMFocusOut\", function(ev) {"
-                        "    if (__main_window_isTextElement__(ev.target)) {"
-                        "        __main_window__.handleFocusOut();"
-                        "    }"
-                        "}, false);"
+						"var __main_window_this__ = this;"
+						"function __main_window_updateElement__(el) {"
+						//"alert('el: ' + el);"
+						"    if (__main_window_isTextElement__(el)) {"
+                        "        el.addEventListener('focusin', function(ev) {"
+                        "            __main_window__.handleFocusIn();"
+                        "            document.body.scrollTop = window.scrollY + ev.target.getBoundingClientRect().top - 80;"
+                        "        }, false);"
+                        "        el.addEventListener('focusout', function(ev) {"
+						"            __main_window__.handleFocusOut();"
+						"        }, false);"
+						"    }"
+						"}"
+						"function __main_window_updateElements__() {"
+						"    var elements = document.getElementsByTagName('input');"
+						"    Array.prototype.push.apply(elements, document.getElementsByTagName('textarea'));"
+						//"alert('num elements: ' + elements.length);"
+						"    for (var i in elements) {"
+						"        __main_window_updateElement__(elements[i]);"
+						"    }"
+						"}"
+						"__main_window_updateElements__();"
+						"function __main_window_observerCallback__(list, observer) {"
+						"    var addedNodes = list.addedNodes;"
+						//"alert('added nodes: ' + addedNodes.length);"
+						"    for (var i in addedNodes) {"
+						"        __main_window_updateElement__(addedNodes[i]);"
+						"    }"
+						"}"
+						"var __main_window_observer__ = new MutationObserver(__main_window_observerCallback__);"
+						"__main_window_observer__.observe(document, {childList:true,subtree:true});"
+						//"alert('this is the end');"
 						);
 			}
 		}
