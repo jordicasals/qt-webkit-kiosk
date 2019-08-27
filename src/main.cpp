@@ -74,6 +74,7 @@ bool setupOptions(AnyOption *cmdopts)
     cmdopts->setFlag("help", 'h');
     cmdopts->setFlag("version", 'v');
     cmdopts->setFlag("clear-cache", 'C');
+	cmdopts->setFlag("rotate", 'r');
 
     cmdopts->setOption("config", 'c');
     cmdopts->setOption("uri", 'u');
@@ -115,15 +116,19 @@ int main(int argc, char * argv[])
     MainWindow *browser = new MainWindow();
     browser->init(cmdopts);
 
+	bool rotate = cmdopts->getFlag("rotate") || cmdopts->getFlag('r');
+
 	QGraphicsScene *scene = new QGraphicsScene();
     QGraphicsView *view = new QGraphicsView();
-    view->setGeometry(0, 0, 720, 1280);
+    view->setGeometry(0, 0, rotate ? 720 : 1280, rotate ? 1280 : 720);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     scene->addWidget(browser);
     view->setScene(scene);
     view->show();
-    view->rotate(90);
+	if (rotate) {
+		view->rotate(90);
+	}
 
     // executes browser.cleanupSlot() when the Qt framework emits aboutToQuit() signal.
     QObject::connect(qApp, SIGNAL(aboutToQuit()),

@@ -154,6 +154,7 @@ private:
     QTimer *delayedLoad;
 
 	Keyboard *keyboard;
+	bool rotate;
 };
 
 #endif // QWK_MAINWINDOW_H

@@ -63,6 +63,7 @@ MainWindow::MainWindow() : QMainWindow()
     topBox          = NULL;
     loadProgress    = NULL;
     messagesBox     = NULL;
+	rotate = false;
 
     qwkSettings     = new QwkSettings();
 
@@ -82,7 +83,6 @@ MainWindow::MainWindow() : QMainWindow()
 #ifdef USE_TESTLIB
     simulateClick = new QTestEventList();
 #endif
-
 }
 
 void MainWindow::init(AnyOption *opts)
@@ -99,6 +99,8 @@ void MainWindow::init(AnyOption *opts)
     } else {
         qwkSettings->loadSettings(QString(""));
     }
+
+	rotate = cmdopts->getFlag("rotate") || cmdopts->getFlag('r');
 
     if (qwkSettings->getBool("signals/enable")) {
         connect(handler, SIGNAL(sigUSR1()), SLOT(unixSignalUsr1()));
@@ -443,33 +445,11 @@ void MainWindow::cleanupSlot()
 
 void MainWindow::centerFixedSizeWindow()
 {
-    quint16 widowWidth = 720; //qwkSettings->getUInt("view/fixed-width");
-    quint16 widowHeight = 1290; //qwkSettings->getUInt("view/fixed-height");
+    move(0, 0);
 
-	/*
-    quint16 screenWidth = QApplication::desktop()->screenGeometry().width();
-    quint16 screenHeight = QApplication::desktop()->screenGeometry().height();
-
-    qDebug() << "Screen size: " << screenWidth << "x" << screenHeight;
-	*/
-
-    quint16 x = 0;
-    quint16 y = 0;
-
-	/*
-    if (qwkSettings->getUInt("view/fixed-centered")) {
-        x = (screenWidth - widowWidth) / 2;
-        y = (screenHeight - widowHeight) / 2;
-    } else {
-        x = qwkSettings->getUInt("view/fixed-x");
-        y = qwkSettings->getUInt("view/fixed-y");
-    }
-	*/
-
-    qDebug() << "Move window to: (" << x << ";" << y << ")";
-
-    move ( x, y );
-    setFixedSize( widowWidth, widowHeight );
+    quint16 windowWidth = rotate ? 720 : 1290;
+    quint16 windowHeight = rotate ? 1290 : 720;
+    setFixedSize(windowWidth, windowHeight);
 }
 
 
